@@ -3,7 +3,7 @@ import requestIp from 'request-ip';
 
 export const checkOrigin = (req: Request, res: Response, next: NextFunction) => {
     const clientIp = requestIp.getClientIp(req);
-    const hostname = req.hostname;
+    const hostname = req.headers["origin"];
 
     // Lista de IPs permitidos (localhost IPv4, IPv6, e IPv4 mapeado para IPv6)
     const allowedIps = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
@@ -12,7 +12,7 @@ export const checkOrigin = (req: Request, res: Response, next: NextFunction) => 
     const isAllowedIp = clientIp !== null && allowedIps.includes(clientIp);
     
     // Verifica se o hostname é o esperado
-    const isAllowedHostname = hostname.includes("zendy.acutistecnologia.com");
+    const isAllowedHostname = hostname?.includes("zendy.acutistecnologia.com");
 
     // Verifica o header zendy-frontend
     const header = req.headers["x-app-origin"];
