@@ -13,6 +13,7 @@ const whatsappService = new WhatsAppService();
 
 app.use(cors());
 app.use(express.json());
+app.set("trust proxy", true);
 app.use(checkOrigin);
 
 app.get('/', (req, res) => {
