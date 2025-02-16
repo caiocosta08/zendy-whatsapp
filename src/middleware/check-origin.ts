@@ -15,7 +15,7 @@ export const checkOrigin = (req: Request, res: Response, next: NextFunction) => 
     const isAllowedHostname = hostname.includes("zendy.acutistecnologia.com");
 
     // Verifica o header zendy-frontend
-    const isFrontend = req.header("X-App-Origin") === "zedy-frontend";
+    const isFrontend = req.headers["X-App-Origin"] === "zendy-frontend";
 
     console.log('Client IP:', clientIp);
     console.log('Is Allowed IP:', isAllowedIp);
