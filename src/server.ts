@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/error-handler';
 import { validateInput } from './middleware/validate-input';
 import dotenv from 'dotenv';
 import cors from "cors";
+import { checkOrigin } from './middleware/check-origin';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const whatsappService = new WhatsAppService();
 
 app.use(cors());
 app.use(express.json());
+app.use(checkOrigin);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Application running', status: 200 });
