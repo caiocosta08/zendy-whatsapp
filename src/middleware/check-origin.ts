@@ -23,7 +23,7 @@ export const checkOrigin = (req: Request, res: Response, next: NextFunction) => 
     console.log('Hostname:', hostname);
     console.log('Is Allowed Hostname:', isAllowedHostname);
     console.log('Is Frontend:', isFrontend);
-    console.log('header:', isFrontend);
+    console.log('header:', header, 'headers search: \n', req.headers);
 
     if (isAllowedIp || isAllowedHostname || isFrontend) {
         next();
