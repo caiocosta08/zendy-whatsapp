@@ -52,6 +52,11 @@ async function start() {
         }
     });
 
+    app.use((req: any, res: any, next) => {
+        if (req.hostname === "localhost") return res.status(403).send({ error: "not authorized" })
+        next()
+    })
+
     app.get('/', (req: any, res: any) => {
         res.json({ message: 'Application running', status: 200 });
     });
