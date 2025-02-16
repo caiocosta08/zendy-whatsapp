@@ -54,6 +54,7 @@ async function start() {
 
     app.use((req: any, res: any, next) => {
         if (req.hostname === "localhost") return res.status(403).send({ error: "not authorized" })
+            console.log(req.ip, req.hostname)
         next()
     })
 
