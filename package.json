@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx ts-node src/server.ts"
+    "dev": "npx ts-node src/server.ts",
+    "download-updates": "git pull origin main && npm install && pm2 restart zendy-wa"
   },
   "repository": {
     "type": "git",

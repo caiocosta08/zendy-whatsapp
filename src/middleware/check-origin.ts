@@ -15,13 +15,15 @@ export const checkOrigin = (req: Request, res: Response, next: NextFunction) => 
     const isAllowedHostname = hostname.includes("zendy.acutistecnologia.com");
 
     // Verifica o header zendy-frontend
-    const isFrontend = req.headers["X-App-Origin"] === "zendy-frontend";
+    const header = req.headers["X-App-Origin"];
+    const isFrontend = header === "zendy-frontend";
 
     console.log('Client IP:', clientIp);
     console.log('Is Allowed IP:', isAllowedIp);
     console.log('Hostname:', hostname);
     console.log('Is Allowed Hostname:', isAllowedHostname);
-    console.log('Is Frontedn:', isFrontend);
+    console.log('Is Frontend:', isFrontend);
+    console.log('header:', isFrontend);
 
     if (isAllowedIp || isAllowedHostname || isFrontend) {
         next();
