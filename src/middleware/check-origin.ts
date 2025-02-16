@@ -14,12 +14,16 @@ export const checkOrigin = (req: Request, res: Response, next: NextFunction) => 
     // Verifica se o hostname é o esperado
     const isAllowedHostname = hostname.includes("zendy.acutistecnologia.com");
 
+    // Verifica o header zendy-frontend
+    const isFrontend = req.headers["X-App-Origin"] === "zedy-frontend";
+
     console.log('Client IP:', clientIp);
     console.log('Is Allowed IP:', isAllowedIp);
     console.log('Hostname:', hostname);
     console.log('Is Allowed Hostname:', isAllowedHostname);
+    console.log('Is Frontedn:', isFrontend);
 
-    if (isAllowedIp || isAllowedHostname) {
+    if (isAllowedIp || isAllowedHostname || isFrontend) {
         next();
     } else {
         res.status(403).json({ error: "Access denied." });
