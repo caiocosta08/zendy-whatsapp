@@ -10,8 +10,8 @@ RUN npm install --quiet
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
 EXPOSE 3002
 
-CMD [ "npm", "run", "start" ] 
+CMD [ "npm", "run", "dev" ] 
