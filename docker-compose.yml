@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  baileys-db:
+  zendy-whatsapp-db:
     image: postgres
-    container_name: baileys-db
+    container_name: zendy-whatsapp-db
     environment:
       POSTGRES_PASSWORD: 2024pass
       POSTGRES_DB: bailey
@@ -13,8 +13,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks: 
       - wpp-net
-  baileys-api:
-    container_name: baileys-api
+  zendy-whatsapp:
+    container_name: zendy-whatsapp
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -25,9 +25,9 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgres://postgres:2024pass@baileys-db:5432/bailey
+      DATABASE_URL: postgres://postgres:2024pass@zendy-whatsapp-db:5432/bailey
     depends_on:
-      - baileys-db
+      - zendy-whatsapp-db
     networks: 
       - wpp-net
 
