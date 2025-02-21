@@ -19,6 +19,8 @@ jobs:
         run: |
           echo "DATABASE_URL=postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db" > .env
           chmod 644 .env
+          mkdir /tmp/zendy-whatsapp-deploy
+          chmod 644 /tmp/zendy-whatsapp-deploy/*
 
       - name: Build Docker image with docker compose
         run: |
@@ -32,8 +34,8 @@ jobs:
         run: |
           docker save -o zendy-whatsapp.tar zendy-whatsapp:latest
           docker save -o postgresql-container.tar postgres:latest
-          chmod 644 ./zendy-whatsapp.tar
-          chmod 644 ./postgresql-container.tar
+          chmod 644 /tmp/zendy-whatsapp-deploy/zendy-whatsapp.tar
+          chmod 644 /tmp/zendy-whatsapp-deploy/postgresql-container.tar
 
       - name: Copy Docker image, .env, and docker-compose.yml to GCP
         uses: appleboy/scp-action@master
