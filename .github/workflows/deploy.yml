@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "DATABASE_URL=postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db" > .env
           chmod 644 .env
-          chmod 644 /tmp/*
+          # chmod 644 /tmp/*
 
       - name: Build Docker image with docker compose
         run: |
@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
           source: "zendy-whatsapp.tar, postgresql-container.tar,.env,docker-compose.yml,Dockerfile"
-          target: "/tmp"
+          target: "/tmp/zendy-whatsapp-deploy"
 
       - name: Deploy and restart application on GCP with Docker Compose
         uses: appleboy/ssh-action@master
@@ -48,6 +48,10 @@ jobs:
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
           script: |
+            # Cria e entra no diretório de deploy
+            mkdir -p /tmp/zendy-whatsapp-deploy
+            cd /tmp/zendy-whatsapp-deploy
+
             # Carrega a imagem Docker
             docker load -i /tmp/zendy-whatsapp.tar
             docker load -i /tmp/postgresql-container.tar
@@ -62,4 +66,5 @@ jobs:
             docker compose -f /tmp/docker-compose.yml up -d --build
             
             # Remove arquivos temporários
+            rm -rf /tmp/zendy-whatsapp-deploy
             rm /tmp/zendy-whatsapp.tar /tmp/postgresql-container.tar /tmp/.env /tmp/docker-compose.yml /tmp/Dockerfile
