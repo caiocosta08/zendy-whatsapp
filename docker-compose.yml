@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: 2024pass
       POSTGRES_DB: bailey
     ports:
-      - "5432:5432"  # Exportado apenas para demonstração, remova em produção
+      - "5432:5432"  
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks: 
@@ -18,6 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    image: zendy-whatsapp:latest  # Define explicitamente o nome da imagem
     volumes:
       - '.:/app'
       - /app/node_modules

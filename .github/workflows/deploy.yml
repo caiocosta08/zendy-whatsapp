@@ -23,6 +23,7 @@ jobs:
       - name: Build Docker image with docker compose
         run: |
           docker compose build
+          docker images | grep zendy-whatsapp  # Verifica se a imagem foi criada
 
       - name: Save Docker image to tar
         run: |

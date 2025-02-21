@@ -4,15 +4,14 @@ WORKDIR /app
 
 COPY package*.json .
 
-# Install git
 RUN apk add --no-cache git
 
 RUN npm install --quiet
 
-RUN npx prisma migrate
-
 COPY . .
+
+RUN npx prisma migrate deploy
 
 EXPOSE 3002
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "run", "start" ] 
