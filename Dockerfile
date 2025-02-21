@@ -6,12 +6,20 @@ COPY package*.json ./
 
 RUN apk add --no-cache git openssl
 
-RUN npm install --quiet
+RUN npm ci --quiet
 
 COPY . .
 
-# RUN npm run build
+RUN npm run build
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
 
 EXPOSE 3002
 
-CMD [ "npm", "run", "dev" ] 
+CMD [ "npm", "start" ]
