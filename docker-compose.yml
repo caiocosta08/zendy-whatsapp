@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgresql-container:
-    image: postgres:15-alpine
+    image: postgres:latest
     container_name: postgresql-container
     environment:
       POSTGRES_PASSWORD: 2024pass
