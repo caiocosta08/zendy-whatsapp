@@ -22,6 +22,7 @@ services:
 
   zendy-whatsapp:
     container_name: zendy-whatsapp
+    env_file: .env
     image: zendy-whatsapp:latest
     build:
       context: .
