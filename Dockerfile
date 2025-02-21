@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM node:22 AS builder
 
 WORKDIR /app
 
@@ -13,6 +13,6 @@ RUN npx prisma migrate
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3002
 
 CMD [ "npm", "run", "dev" ]

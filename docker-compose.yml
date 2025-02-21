@@ -23,7 +23,7 @@ services:
       - /app/node_modules
       - prisma:/prisma
     ports:
-      - "3000:3000"
+      - "3002:3002"
     environment:
       DATABASE_URL: postgres://postgres:2024pass@baileys-db:5432/bailey
     depends_on:
