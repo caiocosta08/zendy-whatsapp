@@ -5,7 +5,8 @@ services:
     image: postgres:15-alpine
     container_name: postgresql-container
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: 2024pass
+      # POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: zendy_whatsapp_db
     ports:
       - "5432:5432"
