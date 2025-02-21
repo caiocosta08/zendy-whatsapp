@@ -6,7 +6,7 @@ services:
     container_name: zendy-whatsapp-db
     environment:
       POSTGRES_PASSWORD: 2024pass
-      POSTGRES_DB: bailey
+      POSTGRES_DB: zendy_whatsapp_db
     ports:
       - "5432:5432"  
     volumes:
@@ -26,7 +26,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgres://postgres:2024pass@zendy-whatsapp-db:5432/bailey
+      DATABASE_URL: postgres://postgres:2024pass@zendy-whatsapp-db:5432/zendy_whatsapp_db
     depends_on:
       - zendy-whatsapp-db
     networks: 
