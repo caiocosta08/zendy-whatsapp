@@ -42,13 +42,13 @@ jobs:
             docker load < zendy-whatsapp.tar
 
             # Stop and remove existing services
-            docker-compose down
+            docker compose down
 
             # Start the services
-            docker-compose up -d
+            docker compose up -d
 
             # Run migrations
-            docker-compose exec -T zendy-whatsapp npx prisma migrate deploy
+            docker compose exec -T zendy-whatsapp npx prisma migrate deploy
 
             # Clean up
             rm zendy-whatsapp.tar
