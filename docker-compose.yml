@@ -21,7 +21,7 @@ services:
 
   zendy-whatsapp:
     container_name: zendy-whatsapp
-    image: ${DOCKER_USERNAME}/zendy-whatsapp:latest
+    image: zendy-whatsapp:latest
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -30,7 +30,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgresql-container:5432/zendy_whatsapp_db
+      DATABASE_URL: postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db
     depends_on:
       postgresql-container:
         condition: service_healthy
