@@ -63,16 +63,17 @@ jobs:
             docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml down || true
             
             # Executa as migrações
-            # docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
+            docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
             
             # Sobe o serviço com Docker Compose
             docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml up -d --build
 
             # Sobe os serviços com Docker Compose
-            # docker compose -f docker-compose.yml up -d --build
+            docker compose -f docker-compose.yml up -d --build
             
             # Executa as migrações após os serviços estarem rodando
-            docker compose -f docker-compose.yml exec -T zendy-whatsapp npx prisma migrate deploy
+            docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
+            # docker compose -f docker-compose.yml exec -T zendy-whatsapp npx prisma migrate deploy
             
             # Remove arquivos temporários
             rm -rf /tmp/zendy-whatsapp-deploy
