@@ -19,16 +19,19 @@ jobs:
         run: |
           echo "DATABASE_URL=postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db" > .env
           chmod 644 .env
-          # chmod 644 /tmp/*
 
       - name: Build Docker image with docker compose
         run: |
           docker compose build
 
+      - name: Pull Postgres image
+        run: |
+          docker pull postgres:latest  # Puxa a imagem oficial do Postgres
+
       - name: Save Docker images to tar
         run: |
           docker save -o zendy-whatsapp.tar zendy-whatsapp:latest
-          docker save -o postgresql-container.tar postgres
+          docker save -o postgresql-container.tar postgres:latest
           chmod 644 ./zendy-whatsapp.tar
           chmod 644 ./postgresql-container.tar
 
