@@ -18,6 +18,7 @@ jobs:
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV }}" > .env
+          cat .env  # Mostra o conteúdo no log para depuração
           chmod 644 .env
 
       - name: Build Docker image with docker compose
@@ -52,10 +53,12 @@ jobs:
             # Para o contêiner atual (se existir)
             docker stop zendy-whatsapp-container || true
             docker rm -f zendy-whatsapp-container || true
+
             docker container prune -f || true
 
             # Inicia um contêiner temporário para rodar as migrações
-            docker run --rm --env-file /tmp/.env zendy-whatsapp:latest npx prisma migrate deploy
+            # docker run --rm --env-file /tmp/.env zendy-whatsapp:latest npx prisma migrate deploy
+            docker run --rm --env-file /tmp/.env -e DATABASE_URL="postgres://postgres:2024pass@zendy-whatsapp-db:5432/zendy_whatsapp_db" zendy-whatsapp:latest npx prisma migrate deploy
             
             # Inicia o novo contêiner com o arquivo .env
             docker run -d --name zendy-whatsapp-container -p 3002:3002 \
