@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 COPY .env ./
 
-RUN apk add --no-cache git openssl
+RUN apk add --no-cache git openssl openssl-dev libssl1.1
 
 RUN npm ci --quiet
 

@@ -46,6 +46,9 @@ jobs:
             # Load the Docker image
             docker load < zendy-whatsapp.tar
 
+            # Regenerate Prisma Client
+            # docker run --rm -v $(pwd)/prisma:/app/prisma zendy-whatsapp:latest npx prisma generate
+
             # Stop and remove existing services
             docker compose down
 
