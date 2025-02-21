@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY .env ./
 
 RUN apk add --no-cache git openssl
 
