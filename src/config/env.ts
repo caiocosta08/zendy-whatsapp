@@ -47,25 +47,37 @@ const envSchema = z
 	});
 
 const processEnv: Partial<CustomProcessEnv> = {
-	PORT: process.env.PORT ? Number(process.env.PORT) : 3000,
-	NODE_ENV: process.env.NODE_ENV as "development" | "production" | "test",
-	URL_WEBHOOK: process.env.URL_WEBHOOK,
+
+	/**
+	 * 
+	 * PORT="3000"
+NODE_ENV="development"
+URL_WEBHOOK="http://localhost:3000/webhook"
+ENABLE_WEBHOOK="true"
+ENABLE_WEBSOCKET="true"
+BOT_NAME="Whatsapp Bot"
+DATABASE_URL="postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db"
+LOG_LEVEL="debug"
+RECONNECT_INTERVAL="5000"
+MAX_RECONNECT_RETRIES="5"
+SSE_MAX_QR_GENERATION="10"
+SESSION_CONFIG_ID="session-config"
+API_KEY="a6bc226axxxxxxxxxxxxxx"
+
+	 */
+	PORT: 3002,
+	NODE_ENV: "production",
+	URL_WEBHOOK: "http://localhost:3000/webhook",
 	ENABLE_WEBHOOK: process.env.ENABLE_WEBHOOK === "true",
 	ENABLE_WEBSOCKET: process.env.ENABLE_WEBSOCKET === "true",
-	BOT_NAME: process.env.BOT_NAME,
-	DATABASE_URL: process.env.DATABASE_URL,
-	LOG_LEVEL: process.env.LOG_LEVEL as LogLevel,
-	RECONNECT_INTERVAL: process.env.RECONNECT_INTERVAL
-		? Number(process.env.RECONNECT_INTERVAL)
-		: undefined,
-	MAX_RECONNECT_RETRIES: process.env.MAX_RECONNECT_RETRIES
-		? Number(process.env.MAX_RECONNECT_RETRIES)
-		: undefined,
-	SSE_MAX_QR_GENERATION: process.env.SSE_MAX_QR_GENERATION
-		? Number(process.env.SSE_MAX_QR_GENERATION)
-		: undefined,
-	SESSION_CONFIG_ID: process.env.SESSION_CONFIG_ID,
-	API_KEY: process.env.API_KEY,
+	BOT_NAME: "Whatsapp Bot",
+	DATABASE_URL: "postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db",
+	LOG_LEVEL: "debug" as LogLevel,
+	RECONNECT_INTERVAL: 5000,
+	MAX_RECONNECT_RETRIES: 5,
+	SSE_MAX_QR_GENERATION: 10,
+	SESSION_CONFIG_ID: "session-config",
+	API_KEY: "a6bc226axxxxxxxxxxxxxx"
 };
 
 type EnvInput = z.input<typeof envSchema>;
