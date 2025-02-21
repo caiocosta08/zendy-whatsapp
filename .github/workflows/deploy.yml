@@ -56,18 +56,17 @@ jobs:
             cd /tmp/zendy-whatsapp-deploy
 
             # Carrega a imagem Docker
-            docker load -i /tmp/zendy-whatsapp.tar
-            docker load -i /tmp/postgresql-container.tar
+            docker load -i /tmp/zendy-whatsapp-deploy/zendy-whatsapp.tar
+            docker load -i /tmp/zendy-whatsapp-deploy/postgresql-container.tar
             
             # Para e remove serviços existentes do Compose
-            docker compose -f /tmp/docker-compose.yml down || true
+            docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml down || true
             
             # Executa as migrações
-            docker run --rm --env-file /tmp/.env zendy-whatsapp:latest npx prisma migrate deploy
+            docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
             
             # Sobe o serviço com Docker Compose
-            docker compose -f /tmp/docker-compose.yml up -d --build
+            docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml up -d --build
             
             # Remove arquivos temporários
             rm -rf /tmp/zendy-whatsapp-deploy
-            rm /tmp/zendy-whatsapp.tar /tmp/postgresql-container.tar /tmp/.env /tmp/docker-compose.yml /tmp/Dockerfile
