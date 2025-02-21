@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  zendy-whatsapp-db:
+  postgresql-container:
     image: postgres
-    container_name: zendy-whatsapp-db
+    container_name: postgresql-container
     environment:
       POSTGRES_PASSWORD: 2024pass
       POSTGRES_DB: zendy_whatsapp_db
@@ -26,9 +26,9 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgres://postgres:2024pass@zendy-whatsapp-db:5432/zendy_whatsapp_db
+      DATABASE_URL: postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db
     depends_on:
-      - zendy-whatsapp-db
+      - postgresql-container
     networks: 
       - wpp-net
 

@@ -17,30 +17,29 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV }}" > .env
-          cat .env  # Mostra o conteúdo no log para depuração
+          echo "DATABASE_URL=postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db" > .env
+          cat .env  # Depuração
           chmod 644 .env
 
       - name: Build Docker image with docker compose
         run: |
           docker compose build
-          docker images | grep zendy-whatsapp  # Verifica se a imagem foi criada
 
       - name: Save Docker image to tar
         run: |
           docker save -o zendy-whatsapp.tar zendy-whatsapp:latest
           chmod 644 ./zendy-whatsapp.tar
 
-      - name: Copy Docker image and .env to GCP
+      - name: Copy Docker image, .env, and docker-compose.yml to GCP
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
-          source: "zendy-whatsapp.tar,.env"
+          source: "zendy-whatsapp.tar,.env,docker-compose.yml,Dockerfile"
           target: "/tmp"
 
-      - name: Deploy and restart application on GCP
+      - name: Deploy and restart application on GCP with Docker Compose
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.GCP_HOST }}
@@ -50,20 +49,14 @@ jobs:
             # Carrega a imagem Docker
             docker load -i /tmp/zendy-whatsapp.tar
             
-            # Para o contêiner atual (se existir)
-            docker stop zendy-whatsapp-container || true
-            docker rm -f zendy-whatsapp-container || true
-
-            docker container prune -f || true
-
-            # Inicia um contêiner temporário para rodar as migrações
-            # docker run --rm --env-file /tmp/.env zendy-whatsapp:latest npx prisma migrate deploy
-            docker run --rm --env-file /tmp/.env -e DATABASE_URL="postgres://postgres:2024pass@zendy-whatsapp-db:5432/zendy_whatsapp_db" zendy-whatsapp:latest npx prisma migrate deploy
+            # Para e remove serviços existentes do Compose
+            docker compose -f /tmp/docker-compose.yml down || true
             
-            # Inicia o novo contêiner com o arquivo .env
-            docker run -d --name zendy-whatsapp-container -p 3002:3002 \
-              --env-file /tmp/.env \
-              zendy-whatsapp:latest
+            # Executa as migrações
+            docker run --rm --env-file /tmp/.env zendy-whatsapp:latest npx prisma migrate deploy
             
-            # Remove os arquivos temporários
-            rm /tmp/zendy-whatsapp.tar /tmp/.env
+            # Sobe o serviço com Docker Compose
+            docker compose -f /tmp/docker-compose.yml up -d --build
+            
+            # Remove arquivos temporários
+            rm /tmp/zendy-whatsapp.tar /tmp/.env /tmp/docker-compose.yml /tmp/Dockerfile
