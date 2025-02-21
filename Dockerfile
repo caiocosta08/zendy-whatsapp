@@ -4,13 +4,11 @@ WORKDIR /app
 
 COPY package*.json .
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git openssl
 
 RUN npm install --quiet
 
 COPY . .
-
-RUN npx prisma migrate deploy
 
 EXPOSE 3002
 
