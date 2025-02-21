@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.GCP_HOST }}
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_PRIVATE_KEY }}
-          source: "zendy-whatsapp.tar, postgresql-container.tar,.env,docker-compose.yml,Dockerfile"
+          source: "zendy-whatsapp.tar, postgresql-container.tar,.env,docker-compose.yml,Dockerfile,package.json,package-lock.json,prisma/"
           target: "/tmp/zendy-whatsapp-deploy"
 
       - name: Deploy and restart application on GCP with Docker Compose
@@ -63,10 +63,16 @@ jobs:
             docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml down || true
             
             # Executa as migrações
-            docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
+            # docker run --rm --env-file /tmp/zendy-whatsapp-deploy/.env zendy-whatsapp:latest npx prisma migrate deploy
             
             # Sobe o serviço com Docker Compose
             docker compose -f /tmp/zendy-whatsapp-deploy/docker-compose.yml up -d --build
+
+            # Sobe os serviços com Docker Compose
+            # docker compose -f docker-compose.yml up -d --build
+            
+            # Executa as migrações após os serviços estarem rodando
+            docker compose -f docker-compose.yml exec -T zendy-whatsapp npx prisma migrate deploy
             
             # Remove arquivos temporários
             rm -rf /tmp/zendy-whatsapp-deploy
