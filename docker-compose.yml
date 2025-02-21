@@ -2,39 +2,44 @@ version: '3.8'
 
 services:
   postgresql-container:
-    image: postgres:latest
+    image: postgres:15-alpine
     container_name: postgresql-container
     environment:
-      POSTGRES_PASSWORD: 2024pass
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: zendy_whatsapp_db
     ports:
-      - "5432:5432"  
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks: 
       - wpp-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   zendy-whatsapp:
     container_name: zendy-whatsapp
+    image: ${DOCKER_USERNAME}/zendy-whatsapp:latest
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: zendy-whatsapp:latest  # Define explicitamente o nome da imagem
     volumes:
-      - '.:/app'
-      - /app/node_modules
-      - prisma:/prisma
+      - ./prisma:/app/prisma
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgres://postgres:2024pass@postgresql-container:5432/zendy_whatsapp_db
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgresql-container:5432/zendy_whatsapp_db
     depends_on:
-      - postgresql-container
+      postgresql-container:
+        condition: service_healthy
     networks: 
       - wpp-net
 
 volumes:
   postgres_data:
-  prisma:
+
 networks:
   wpp-net:
     driver: bridge
