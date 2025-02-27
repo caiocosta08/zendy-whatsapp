@@ -198,6 +198,7 @@ class WhatsappService {
 			},
 			version: [2, 3000, 1015901307],
 			logger,
+			syncFullHistory: false,
 			shouldIgnoreJid: (jid) => isJidBroadcast(jid),
 			getMessage: async (key) => {
 				const data = await prisma.message.findFirst({
