@@ -67,7 +67,7 @@ API_KEY="a6bc226axxxxxxxxxxxxxx"
 	 */
 	PORT: 3002,
 	NODE_ENV: "production",
-	URL_WEBHOOK: "http://localhost:3000/webhook",
+	URL_WEBHOOK: "http://localhost:3002/webhook",
 	ENABLE_WEBHOOK: process.env.ENABLE_WEBHOOK === "true",
 	ENABLE_WEBSOCKET: process.env.ENABLE_WEBSOCKET === "true",
 	BOT_NAME: "Whatsapp Bot",
