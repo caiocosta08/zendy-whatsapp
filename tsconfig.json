@@ -22,7 +22,9 @@
 			"@/*": ["src/*"]
 		}
 	},
-	"include": ["src"],
+	"include": [
+	  "src/**/*"
+	],
 	"exclude": ["node_modules", "prisma", "dist"],
 	"ts-node": {
 		"require": ["tsconfig-paths/register"]
