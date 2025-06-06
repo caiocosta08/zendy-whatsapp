@@ -77,7 +77,7 @@ class WhatsappService {
 	private static shouldReconnect(sessionId: string) {
 		let attempts = WhatsappService.retries.get(sessionId) ?? 0;
 
-		if (attempts < env.MAX_RECONNECT_RETRIES) {
+		if (env.MAX_RECONNECT_RETRIES && attempts < env.MAX_RECONNECT_RETRIES) {
 			attempts += 1;
 			WhatsappService.retries.set(sessionId, attempts);
 			return true;
@@ -189,7 +189,7 @@ class WhatsappService {
 			if (
 				!res ||
 				res.writableEnded ||
-				(qr && currentGenerations >= env.SSE_MAX_QR_GENERATION)
+				(env.SSE_MAX_QR_GENERATION && qr && currentGenerations >= env.SSE_MAX_QR_GENERATION)
 			) {
 				res && !res.writableEnded && res.end();
 				destroy();
@@ -312,12 +312,23 @@ class WhatsappService {
 	static async validJid(session: Session, jid: string, type: "group" | "number" = "number") {
 		try {
 			if (type === "number") {
-				const [result] = await session.onWhatsApp(jid);
-				if (result?.exists) {
-					return result.jid;
-				} else {
-					return null;
+				const results = await session.onWhatsApp(jid);
+
+				// Verifica se results é um array válido e tem pelo menos um elemento
+				if (Array.isArray(results) && results.length > 0) {
+					const result = results[0];
+					if (result?.exists) {
+						return result.jid;
+					}
 				}
+				return null;
+
+				// const [result] = await session.onWhatsApp(jid);
+				// if (result?.exists) {
+				// 	return result.jid;
+				// } else {
+				// 	return null;
+				// }
 			}
 
 			const groupMeta = await session.groupMetadata(jid);

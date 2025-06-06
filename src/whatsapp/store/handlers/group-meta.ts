@@ -12,11 +12,11 @@ export default function groupMetadataHandler(sessionId: string, event: BaileysEv
 	const upsert: BaileysEventHandler<"groups.upsert"> = async (groups) => {
 		try {
 			const results: MakeTransformedPrisma<GroupMetadata>[] = [];
-			await Promise.any(
+			await Promise.all(
 				groups
 					.map((g) => transformPrisma(g))
-					.map((data) => {
-						model.upsert({
+					.map(async (data) => {
+						await model.upsert({
 							select: { pkId: true },
 							create: { ...data, sessionId },
 							update: data,

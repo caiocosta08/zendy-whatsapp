@@ -19,8 +19,8 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 			// ).map((c) => c.id);
 
 			const processedContacts = contacts.map((c) => transformPrisma(c));
-			const upsertPromises = processedContacts.map((data) =>
-				model.upsert({
+			const upsertPromises = processedContacts.map( async (data) =>
+				await model.upsert({
 					select: { pkId: true },
 					create: { ...data, sessionId },
 					update: data,
@@ -28,7 +28,7 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 				}),
 			);
 
-			await Promise.any([
+			await Promise.all([
 				...upsertPromises,
 				//danger: contacts come with several patches of N contacts, deleting those that are not in this patch ends up deleting those received in the previous patch
 				//prisma.contact.deleteMany({ where: { id: { in: deletedOldContactIds }, sessionId } }),

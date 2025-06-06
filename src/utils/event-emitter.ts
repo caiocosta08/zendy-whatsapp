@@ -34,13 +34,14 @@ export async function sendWebhook(
 	message?: string,
 ) {
 	try {
-		await axios.post(env.URL_WEBHOOK, {
-			sessionId,
-			event,
-			data,
-			status,
-			message,
-		});
+		if (env.URL_WEBHOOK)
+			await axios.post(env.URL_WEBHOOK, {
+				sessionId,
+				event,
+				data,
+				status,
+				message,
+			});
 	} catch (e: any) {
 		console.error("Error sending webhook", e);
 	}
