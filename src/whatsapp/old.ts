@@ -1,7 +1,6 @@
 // service.ts
 import makeWASocket, {
 	DisconnectReason,
-	fetchLatestBaileysVersion,
 	isJidBroadcast,
 	makeCacheableSignalKeyStore,
 } from "baileys";
@@ -16,7 +15,6 @@ import { toDataURL } from "qrcode";
 import type { WebSocket as WebSocketType } from "ws";
 import env from "@/config/env";
 import QRCode from 'qrcode';
-import P from 'pino';
 
 export type Session = WASocket & {
 	destroy: () => Promise<void>;
@@ -42,17 +40,17 @@ class WhatsappService {
 	}
 
 	private async init() {
-		// // await prisma.session.deleteMany()
-		// // console.log(`x\nx\nx\n`)
-		// // console.log(await prisma.session.findMany())
-		// // console.log(`x\nx\nx\n`)
-		// await Promise.all([
-		// 	prisma.chat.deleteMany(),
-		// 	prisma.contact.deleteMany(),
-		// 	prisma.message.deleteMany(),
-		// 	prisma.groupMetadata.deleteMany(),
-		// 	prisma.session.deleteMany(),
-		// ]);
+		// await prisma.session.deleteMany()
+		// console.log(`x\nx\nx\n`)
+		// console.log(await prisma.session.findMany())
+		// console.log(`x\nx\nx\n`)
+		await Promise.all([
+			prisma.chat.deleteMany(),
+			prisma.contact.deleteMany(),
+			prisma.message.deleteMany(),
+			prisma.groupMetadata.deleteMany(),
+			prisma.session.deleteMany(),
+		]);
 		const storedSessions = await prisma.session.findMany({
 			select: { sessionId: true, data: true },
 			where: { id: { startsWith: env.SESSION_CONFIG_ID } },
@@ -216,18 +214,17 @@ class WhatsappService {
 				creds: state.creds,
 				keys: makeCacheableSignalKeyStore(state.keys, logger),
 			},
-			version: (await fetchLatestBaileysVersion()).version,
-			logger: P({ level: 'error' }),
+			version: [2, 3000, 1015901307],
+			logger,
 			syncFullHistory: false,
-			// shouldIgnoreJid: (jid) => isJidBroadcast(jid),
-			// getMessage: async (key) => {
-			// 	const data = await prisma.message.findFirst({
-			// 		where: { remoteJid: key.remoteJid!, id: key.id!, sessionId },
-			// 	});
-			// 	return (data?.message || undefined) as proto.IMessage | undefined;
-			// },
-			shouldSyncHistoryMessage: () => false,
-			connectTimeoutMs: 60_000,
+			shouldIgnoreJid: (jid) => isJidBroadcast(jid),
+			getMessage: async (key) => {
+				const data = await prisma.message.findFirst({
+					where: { remoteJid: key.remoteJid!, id: key.id!, sessionId },
+				});
+				return (data?.message || undefined) as proto.IMessage | undefined;
+			},
+			shouldSyncHistoryMessage: () => false
 		});
 
 		const store = new Store(sessionId, socket.ev);
