@@ -37,6 +37,11 @@ export const list: RequestHandler = async (req, res) => {
 
 export const send: RequestHandler = async (req, res) => {
 	try {
+		console.log(`\n`)
+		console.log(`--------`)
+		console.log(req.body)
+		console.log(`--------`)
+		console.log(`\n`)
 		const { jid, type = "number", message, options } = req.body;
 		const sessionId = req.params.sessionId;
 		const session = WhatsappService.getSession(sessionId)!;
